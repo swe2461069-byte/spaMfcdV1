@@ -1,23 +1,27 @@
 import { renderNotification } from "../layouts/notificationLayout.js";
 import { renderNutritionTables } from "../components/nutritionTables.js";
 import { nutritionGroups } from "../components/searchSettingsSidebar.js";
+import { getLocalizedValue, t } from "../i18n/i18n.js";
 
 export function buildFoodGroups(data) {
   const grouped = new Map();
   for (const item of data) {
-    const groupName = item.food_group || "Other";
-    if (!grouped.has(groupName)) {
-      grouped.set(groupName, new Map());
+    const groupKey = item.food_group?.en || "Other";
+    if (!grouped.has(groupKey)) {
+      grouped.set(groupKey, {
+        groupName: item.food_group,
+        items: new Map(),
+      });
     }
-    const groupItems = grouped.get(groupName);
-    groupItems.set(item.food_code, {
+    const groupData = grouped.get(groupKey);
+    groupData.items.set(item.food_code, {
       food_code: item.food_code,
       food_name: item.food_name,
     });
   }
-  return Array.from(grouped.entries()).map(([groupName, itemsMap]) => ({
-    groupName,
-    items: Array.from(itemsMap.values()).sort((a, b) => (a.food_name || "").localeCompare(b.food_name || "")),
+  return Array.from(grouped.values()).map((group) => ({
+    groupName: group.groupName,
+    items: Array.from(group.items.values()).sort((a, b) => getLocalizedValue(a.food_name).localeCompare(getLocalizedValue(b.food_name))),
   }));
 }
 
@@ -26,12 +30,11 @@ export function initNutritionData(data) {
   nutritionData = data;
 }
 
-const DEFAULT_TYPES =
-  nutritionGroups
-    .find((group) => group.groupName === "Nutritions")
-    ?.items.filter((item) => item.checked)
-    .map((item) => item.value) || [];
-const DEFAULT_ITEM_COUNT = 4;
+const DEFAULT_TYPES = nutritionGroups
+  .flatMap((group) => group.items)
+  .filter((item) => item.checked)
+  .map((item) => item.value);
+const DEFAULT_ITEM_COUNT = 3;
 
 export function bindSearchEvents() {
   const searchRoot = document;
@@ -64,7 +67,7 @@ function handleTextSearch() {
   clearCheckedFoodCodes();
   const keyword = getSearchKeyword();
   if (!keyword) {
-    setResultHtml(renderNotification("Please enter a food name."));
+    setResultHtml(renderNotification(t("notification.enterFoodName")));
     return;
   }
   renderCurrentResults();
@@ -98,7 +101,12 @@ function getMatchedItems() {
     return nutritionData.filter((item) => selectedCodes.includes(item.food_code));
   }
   if (keyword) {
-    return nutritionData.filter((item) => (item.food_name || "").toLowerCase().includes(keyword));
+    if (keyword.length < 2) return [];
+    return nutritionData.filter((item) => {
+      const foodName = getLocalizedValue(item.food_name).toLowerCase();
+      const words = foodName.split(/\s+/);
+      return words.some((word) => word.startsWith(keyword));
+    });
   }
   return nutritionData.slice(0, DEFAULT_ITEM_COUNT);
 }

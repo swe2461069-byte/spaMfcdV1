@@ -1,0 +1,40 @@
+.image-count-tag {
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  border-radius: 999px;
+  &:hover {
+    background-color: $primaryColorDark;
+  }
+}
+
+#imageModal {
+  .modal-card {
+    width: 640px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .modal-card-head {
+    padding: 1.2rem 1.5rem;
+  }
+  .modal-card-body {
+    padding: 1.5rem;
+  }
+  #slideshowImage {
+    max-height: 52vh;
+    width: auto;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+}
+
+.zoomable-image {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+  transform-origin: center center;
+  user-select: none;
+}
+
+#fullscreenBtn {
+  border: none;
+}

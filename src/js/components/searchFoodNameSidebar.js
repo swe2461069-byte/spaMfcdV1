@@ -1,9 +1,11 @@
+import { t } from "../i18n/i18n.js";
+
 export function renderSearchFoodName() {
   return `    
-    <p class="menu-label app-menu-label">🔍︎ Search by food name:</p>
+    <p class="menu-label app-menu-label">🔍︎ ${t("sidebar.searchByFoodName")}:</p>
     <div class="field">
       <p class="control has-icons-left">
-        <input class="input is-primary" type="text" placeholder="Food Name" id="searchTxt"/>
+        <input class="input is-primary" type="text" placeholder="${t("sidebar.foodName")}" id="searchTxt"/>
         <span class="icon is-small is-left">
           <i class="fa-solid fa-bowl-rice"></i>
         </span>
@@ -12,7 +14,7 @@ export function renderSearchFoodName() {
     <div class="field">
       <p class="control">
         <button class="button is-primary is-fullwidth" type="button" id="searchBtn">
-          Search
+          ${t("sidebar.searchButton")}
         </button>
       </p>
     </div>   
