@@ -1,0 +1,23 @@
+.app-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  max-width: 760px;
+  margin-bottom: 0.5rem;
+}
+.app-line {
+  width: 96px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--orange);
+  margin-bottom: 1.5rem;
+}
+.app-subtitle {
+  color: #607089;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: bold;
+  line-height: 1.6;
+  max-width: 760px;
+  margin-bottom: 2.5rem;
+}
